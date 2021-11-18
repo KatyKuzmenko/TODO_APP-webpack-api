@@ -18,8 +18,8 @@ module.exports = {
       title: 'Development',
       template: path.resolve(__dirname, './src/template.html'),
       filename: 'index.html',
+      inject: 'body',
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),

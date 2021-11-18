@@ -1,5 +1,5 @@
 import Todo from './Todo';
-import './css/style.css';
+import './style.css';
 
 let currentTodos = [];
 const root = document.querySelector('.todoapp');
@@ -11,6 +11,98 @@ class TodoList {
     this.root = document.querySelector('.todoapp');
     this.todos = currentTodos;
     this.render(this.todos);
+  }
+
+  setFilterType(type) {
+    filterType = type;
+    this.render(this.todos);
+  }
+
+  addTodo(event) {
+    if (!event.target.value || event.key !== 'Enter') {
+      return;
+    }
+
+    currentTodos.push(new Todo(event.target.value));
+    this.render(this.todos);
+  }
+
+  removeTodo(todoId) {
+    currentTodos = currentTodos.filter((todo) => todo.id !== id);
+    this.render(this.todos);
+  }
+
+  toggleAll(completed) {
+    currentTodos.forEach((todo) => {
+      todo.completed = completed;
+    });
+
+    this.render(this.todos);
+  }
+
+  toggleTodo(todoId, completed) {
+    const selectedTodo = currentTodos.find((todo) => todo.id === id);
+
+    selectedTodo.completed = completed;
+    this.render(this.todos);
+  }
+
+  editTodo(todoId) {
+    const editInput = this.root.querySelector(`.edit${id}`);
+    const todoItem = this.root.querySelector(`.view${id}`);
+
+    editInput.className = `edit-field edit${id}`;
+    todoItem.classList.add('invisible');
+    editInput.focus();
+    editInput.selectionStart = editInput.value.length;
+  }
+
+  setTitle(todoId, title) {
+    const selectedTodo = currentTodos.find((todo) => todo.id === id);
+
+    selectedTodo.title = title;
+    this.render(this.todos);
+  }
+
+  setTitleOnKeydown(event, todoId, title) {
+    if (event.key !== 'Enter' || !event.target.value.trim()) {
+      return;
+    }
+
+    this.setTitle(id, title);
+  }
+
+  setTitleOnBlur(event, todoId, title) {
+    if (!event.target.value.trim()) {
+      return;
+    }
+
+    this.setTitle(id, title);
+  }
+
+  clearCompleted() {
+    currentTodos = currentTodos.filter((todo) => !todo.completed);
+    this.render(this.todos);
+  }
+
+  openModalWindow(todoId) {
+    const modal = this.root.querySelector('.modal');
+
+    modal.classList.add('modal--active', `modal${todoId}`);
+    id = todoId;
+  }
+
+  deleteTodoAndCloseModalWindow() {
+    const modal = root.querySelector(`.modal${id}`);
+
+    modal.classList.remove('modal--active', `modal${id}`);
+    this.removeTodo(id);
+  }
+
+  closeModalWindow() {
+    const modal = this.root.querySelector(`.modal${id}`);
+
+    modal.classList.remove('modal--active', `modal${id}`);
   }
 
   render() {
@@ -28,8 +120,7 @@ class TodoList {
         <h1>todos</h1>
         <input
           class="new-todo"
-          placeholder="What needs to be done?"
-          onkeydown="todoList.addTodo(event)"
+          placeholder="What needs to be done?" 
         >
       </header>
     `;
@@ -164,98 +255,17 @@ class TodoList {
     const input = this.root.querySelector('.new-todo');
     input.focus();
   }
-
-  setFilterType(type) {
-    filterType = type;
-    this.render(this.todos);
-  }
-
-  addTodo(event) {
-    if (!event.target.value || event.key !== 'Enter') {
-      return;
-    }
-
-    currentTodos.push(new Todo(event.target.value));
-    this.render(this.todos);
-  }
-
-  removeTodo(todoId) {
-    currentTodos = currentTodos.filter((todo) => todo.id !== id);
-    this.render(this.todos);
-  }
-
-  toggleAll(completed) {
-    currentTodos.forEach((todo) => {
-      todo.completed = completed;
-    });
-
-    this.render(this.todos);
-  }
-
-  toggleTodo(todoId, completed) {
-    const selectedTodo = currentTodos.find((todo) => todo.id === id);
-
-    selectedTodo.completed = completed;
-    this.render(this.todos);
-  }
-
-  editTodo(todoId) {
-    const editInput = this.root.querySelector(`.edit${id}`);
-    const todoItem = this.root.querySelector(`.view${id}`);
-
-    editInput.className = `edit-field edit${id}`;
-    todoItem.classList.add('invisible');
-    editInput.focus();
-    editInput.selectionStart = editInput.value.length;
-  }
-
-  setTitle(todoId, title) {
-    const selectedTodo = currentTodos.find((todo) => todo.id === id);
-
-    selectedTodo.title = title;
-    this.render(this.todos);
-  }
-
-  setTitleOnKeydown(event, todoId, title) {
-    if (event.key !== 'Enter' || !event.target.value.trim()) {
-      return;
-    }
-
-    this.setTitle(id, title);
-  }
-
-  setTitleOnBlur(event, todoId, title) {
-    if (!event.target.value.trim()) {
-      return;
-    }
-
-    this.setTitle(id, title);
-  }
-
-  clearCompleted() {
-    currentTodos = currentTodos.filter((todo) => !todo.completed);
-    this.render(this.todos);
-  }
-
-  openModalWindow(todoId) {
-    const modal = this.root.querySelector('.modal');
-
-    modal.classList.add('modal--active', `modal${todoId}`);
-    id = todoId;
-  }
-
-  deleteTodoAndCloseModalWindow() {
-    const modal = root.querySelector(`.modal${id}`);
-
-    modal.classList.remove('modal--active', `modal${id}`);
-    this.removeTodo(id);
-  }
-
-  closeModalWindow() {
-    const modal = this.root.querySelector(`.modal${id}`);
-
-    modal.classList.remove('modal--active', `modal${id}`);
-  }
 }
 
 const todoList = new TodoList();
+
+// так добавляется 1 тудушка
+const newtodoinput = root.querySelector('.new-todo');
+newtodoinput.addEventListener('keydown', (event) => {
+  if (!event.target.value || event.key !== 'Enter') {
+    return;
+  }
+
+  currentTodos.push(new Todo(event.target.value));
+  todoList.render(todoList.todos);
+});
