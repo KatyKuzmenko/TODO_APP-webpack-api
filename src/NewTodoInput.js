@@ -20,7 +20,7 @@ class NewTodoInput extends Component {
       </header>
     `;
 
-    this.root.innerHTML = `${header}`;
+    this.root.innerHTML = header;
 
     const newTodoInput = document.querySelector('.new-todo');
     if (newTodoInput) {
