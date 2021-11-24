@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/NewTodoInput.js',
+    app: './src/components/NewTodoInput.js',
   },
   devtool: 'inline-source-map',
   devServer: {
