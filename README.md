@@ -1,2 +1,2 @@
 # webpack-demo
-https://katykuzmenko.github.io/webpack-demo/
+[DEMOLINK]https://katykuzmenko.github.io/webpack-demo/
