@@ -1,20 +1,146 @@
-import App from './App';
+import Component from './Component';
 import './style.css';
-import Todo from './Todo';
 
-export default class TodoList extends App {
+export default class TodoList extends Component {
   constructor() {
     super();
-    this.root = document.querySelector('.todoapp');
-    this.todos = [];
-    this.id = 0;
+    this.root = document.querySelector('.list');
     this.filterType = 'all';
-    this.render(this.todos);
   }
 
   render() {
-    super.render();
-    const newTodoInput = document.querySelector('.new-todo');
+    const activeTodos = Component.todos.filter((todo) => !todo.completed);
+    const completedTodos = Component.todos.filter((todo) => todo.completed);
+    const filteredTodos = {
+      all: Component.todos,
+      active: activeTodos,
+      completed: completedTodos,
+    };
+
+    const visibleTodos = filteredTodos[this.filterType];
+    const main = `
+      <section class="main">
+        <span class="toggle-all-container">
+          <input
+            id="toggle-all"
+            class="toggle-all"
+            type="checkbox"
+            ${activeTodos.length === 0 ? 'checked' : ''}
+          >
+
+          <label for="toggle-all"></label>
+
+          <ul class="todo-list">
+            ${visibleTodos.map((todo) => `
+              <li
+                class="todo-list__item ${todo.completed ? 'completed' : ''}"
+                data-todo-id="${todo.id}"
+              >
+                <div class="view${todo.id}">
+                  <input
+                    id="todo-${todo.id}"
+                    data-input-id="${todo.id}"
+                    class="toggle"
+                    type="checkbox"
+                    ${todo.completed ? 'checked' : ''}
+                  >
+                  <label
+                    data-label-id="${todo.id}"
+                    class="todo-title"
+                  >${todo.title}</label>
+                    
+                  <button
+                    data-destroy-id="${todo.id}"
+                    class="destroy"
+                  ></button>
+                </div>
+                
+                <input
+                  class="edit-field edit${todo.id} invisible"
+                  id="${todo.id}"
+                  type="text"
+                  value="${todo.title}"
+                >
+              </li>  
+            `).join('')}
+          </ul>
+        </span>
+      </section>
+    `;
+
+    const footer = `
+      <footer class="footer">
+        <span class="todo-count">
+          ${activeTodos.length} items left
+        </span>
+        <ul class="filters">
+          <li>
+            <a
+              data-type="filter"
+              data-filter="all"
+              href="#/"
+              ${this.filterType === 'all' ? 'class="selected"' : ''}
+            >All</a>
+          </li>
+          <li>
+            <a
+              data-type="filter"
+              data-filter="active"
+              href="#/active"
+              ${this.filterType === 'active' ? 'class="selected"' : ''}
+            >Active</a>
+          </li>
+          <li>
+            <a
+              data-type="filter"
+              data-filter="completed"
+              href="#/completed"
+              ${this.filterType === 'completed' ? 'class="selected"' : ''}
+            >Completed</a>
+          </li>
+        </ul>
+        ${completedTodos.length > 0 ? `
+          <button
+            class="clear-completed"
+          >
+            Clear completed
+          </button>
+        ` : ''} 
+      </footer>
+    `;
+
+    const modal = `
+      <div class="modal">
+        <div class="modal__content">
+          <button
+            class="modal__close-button"
+          >
+          </button>
+
+          <p class="modal__title">
+            Are you sure You want to delete this task?
+          </p>
+
+          <div class="button-container">
+            <button
+              class="modal__button--delete"
+            >Delete</button>
+            <button
+              class="modal__button--cancel"
+            >Cancel</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    this.root.innerHTML = `
+        ${Component.todos.length > 0 ? `
+          ${main}
+          ${footer}
+        ` : ''}
+        ${modal}
+    `;
+
     const toggleAll = document.querySelector('.toggle-all');
     const todoTogglers = document.querySelectorAll('.toggle');
     const todoTitle = document.querySelectorAll('.todo-title');
@@ -26,32 +152,21 @@ export default class TodoList extends App {
     const deleteModalButton = document.querySelector('.modal__button--delete');
     const cancelModalButton = document.querySelector('.modal__button--cancel');
 
-    if (newTodoInput) {
-      newTodoInput.addEventListener('keydown', (event) => {
-        if (!event.target.value || event.key !== 'Enter') {
-          return;
-        }
-
-        this.todos.push(new Todo(event.target.value));
-        this.render(this.todos);
-      });
-    }
-
     if (toggleAll) {
       toggleAll.addEventListener('change', (event) => {
-        this.todos.forEach((todo) => {
+        Component.todos.forEach((todo) => {
           todo.completed = event.target.checked;
         });
-
-        this.render(this.todos);
+        this.render(Component.todos);
       });
     }
 
     todoTogglers.forEach((toggler) => {
       toggler.addEventListener('change', (event) => {
-        const selectedTodo = this.todos.find((todo) => todo.id === +event.target.dataset.inputId);
+        const selectedTodo = Component.todos
+          .find((todo) => todo.id === +event.target.dataset.inputId);
         selectedTodo.completed = event.target.checked;
-        this.render(this.todos);
+        this.render(Component.todos);
       });
     });
 
@@ -69,10 +184,10 @@ export default class TodoList extends App {
 
     destroyButton.forEach((button) => {
       button.addEventListener('click', (event) => {
+        Component.id = +event.target.dataset.destroyId;
         const modalWindow = this.root.querySelector('.modal');
 
         modalWindow.classList.add('modal--active', `modal${+event.target.dataset.destroyId}`);
-        this.id = +event.target.dataset.destroyId;
       });
     });
 
@@ -82,10 +197,10 @@ export default class TodoList extends App {
           return;
         }
 
-        const selectedTodo = this.todos.find((todo) => todo.id === +event.target.id);
+        const selectedTodo = Component.todos.find((todo) => todo.id === +event.target.id);
 
         selectedTodo.title = event.target.value;
-        this.render(this.todos);
+        this.render(Component.todos);
       });
 
       edit.addEventListener('blur', (event) => {
@@ -93,137 +208,46 @@ export default class TodoList extends App {
           return;
         }
 
-        const selectedTodo = this.todos.find((todo) => todo.id === +event.target.id);
+        const selectedTodo = Component.todos.find((todo) => todo.id === +event.target.id);
 
         selectedTodo.title = event.target.value;
-        this.render(this.todos);
+        this.render(Component.todos);
       });
     });
 
     filterLinks.forEach((filter) => {
       filter.addEventListener('click', (event) => {
         this.filterType = event.target.dataset.filter;
-        this.render(this.todos);
+        this.render(Component.todos);
       });
     });
 
     if (clearCompletedButton) {
       clearCompletedButton.addEventListener('click', () => {
-        this.todos = this.todos.filter((todo) => !todo.completed);
-        this.render(this.todos);
+        Component.todos = Component.todos.filter((todo) => !todo.completed);
+        this.render(Component.todos);
       });
     }
 
     closeModalButton.addEventListener('click', () => {
-      const modalWindow = this.root.querySelector(`.modal${this.id}`);
+      const modalWindow = this.root.querySelector(`.modal${Component.id}`);
 
-      modalWindow.classList.remove('modal--active', `modal${this.id}`);
+      modalWindow.classList.remove('modal--active', `modal${Component.id}`);
     });
 
     deleteModalButton.addEventListener('click', () => {
-      const modalWindow = this.root.querySelector(`.modal${this.id}`);
-      modalWindow.classList.remove('modal--active', `modal${this.id}`);
-      this.todos = this.todos.filter((todo) => todo.id !== this.id);
-      this.render(this.todos);
+      const modalWindow = this.root.querySelector(`.modal${Component.id}`);
+      modalWindow.classList.remove('modal--active', `modal${Component.id}`);
+      Component.todos = Component.todos.filter((todo) => todo.id !== Component.id);
+      this.render(Component.todos);
     });
 
     cancelModalButton.addEventListener('click', () => {
-      const modalWindow = this.root.querySelector(`.modal${this.id}`);
+      const modalWindow = this.root.querySelector(`.modal${Component.id}`);
 
-      modalWindow.classList.remove('modal--active', `modal${this.id}`);
+      modalWindow.classList.remove('modal--active', `modal${Component.id}`);
     });
   }
 }
-// addTodo(event) {
-//   if (!event.target.value || event.key !== 'Enter') {
-//     return;
-//   }
-
-//   this.todos.push(new Todo(event.target.value));
-//   this.render(this.todos);
-// }
-
-// setFilterType(type) {
-//   this.filterType = type;
-//   this.render(this.todos);
-// }
-
-// removeTodo(id) {
-//   this.todos = this.todos.filter((todo) => todo.id !== id);
-//   this.render(this.todos);
-// }
-
-// toggleAll(completed) {
-//   this.todos.forEach((todo) => {
-//     todo.completed = completed;
-//   });
-
-//   this.render(this.todos);
-// }
-
-// toggleTodo(id, completed) {
-//   const selectedTodo = this.todos.find((todo) => todo.id === id);
-
-//   selectedTodo.completed = completed;
-//   this.render(this.todos);
-// }
-
-// editTodo(id) {
-//   const editInput = this.root.querySelector(`.edit${id}`);
-//   const todoItem = this.root.querySelector(`.view${id}`);
-
-//   editInput.className = `edit-field edit${id}`;
-//   todoItem.classList.add('invisible');
-//   editInput.focus();
-//   editInput.selectionStart = editInput.value.length;
-// }
-
-// setTitle(id, title) {
-//   const selectedTodo = this.todos.find((todo) => todo.id === id);
-
-//   selectedTodo.title = title;
-//   this.render(this.todos);
-// }
-
-// setTitleOnKeydown(event, id, title) {
-//   if (event.key !== 'Enter' || !event.target.value.trim()) {
-//     return;
-//   }
-
-//   this.setTitle(id, title);
-// }
-
-// setTitleOnBlur(event, id, title) {
-//   if (!event.target.value.trim()) {
-//     return;
-//   }
-
-//   this.setTitle(id, title);
-// }
-
-// clearCompleted() {
-//   this.todos = this.todos.filter((todo) => !todo.completed);
-//   this.render(this.todos);
-// }
-
-// openModalWindow(todoId) {
-//   const modal = this.root.querySelector('.modal');
-
-//   modal.classList.add('modal--active', `modal${todoId}`);
-//   this.id = todoId;
-// }
-
-// deleteTodoAndCloseModalWindow() {
-//   const modal = this.root.querySelector(`.modal${this.id}`);
-
-//   modal.classList.remove('modal--active', `modal${this.id}`);
-//   this.removeTodo(this.id);
-// }
-
-// closeModalWindow() {
-//   const modal = this.root.querySelector(`.modal${this.id}`);
-
-//   modal.classList.remove('modal--active', `modal${this.id}`);
-// }
 
 const todoList = new TodoList();
