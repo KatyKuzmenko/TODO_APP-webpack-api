@@ -1,45 +1,40 @@
-import Todo from './Todo';
-import TodoList from './TodoList';
 import Component from '../utils/Component';
 import Store from '../utils/Store';
+import Todo from './Todo';
 
 class NewTodoInput extends Component {
   constructor() {
     super();
-    this.root = document.querySelector('.adding');
-    this.render();
+    this.root = document.querySelector('.todoapp');
   }
 
   render() {
-    const header = `
-      <header class="header">
-        <h1>todos</h1>
-        <input
-          class="new-todo"
-          placeholder="What needs to be done?"
-        >
-      </header>
-    `;
+    const header = document.createElement('header');
+    header.className = 'header';
 
-    this.root.innerHTML = header;
+    const appTitle = document.createElement('h1');
+    appTitle.innerText = 'todos';
 
-    const newTodoInput = document.querySelector('.new-todo');
-    if (newTodoInput) {
-      newTodoInput.addEventListener('keydown', (event) => {
-        if (!event.target.value || event.key !== 'Enter') {
-          return;
-        }
+    const todoInput = document.createElement('input');
+    todoInput.className = 'new-todo';
+    todoInput.placeholder = 'What needs to be done?';
 
-        Store.state.todos.push(new Todo(event.target.value));
-        new TodoList().render(Store.state.todos);
-        new Todo().render();
-        this.render();
-      });
+    header.appendChild(appTitle);
+    header.appendChild(todoInput);
+
+    todoInput.addEventListener('keydown', this.addTodo());
+
+    todoInput.focus();
+  }
+
+  addTodo(event) {
+    if (!event.target.value || event.key !== 'Enter') {
+      return;
     }
 
-    const input = this.root.querySelector('.new-todo');
-    input.focus();
+    Store.state.todos.push(new Todo(event.target.value));
+    this.render();
   }
 }
 
-const header = new NewTodoInput();
+const mainInput = new NewTodoInput();
