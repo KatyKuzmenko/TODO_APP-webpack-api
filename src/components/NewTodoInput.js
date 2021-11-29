@@ -43,7 +43,6 @@ export default class NewTodoInput extends Component {
     this.update()
     eventEmitter.emit('renderTodoList', [])
     eventEmitter.emit('renderTodoFilter', [])
-    eventEmitter.emit('countNotCompletedTodos', [])
   }
 }
 

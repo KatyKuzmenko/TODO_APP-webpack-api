@@ -85,6 +85,8 @@ export default class Todo extends Component {
     } else {
       item.classList.remove('completed')
     }
+    eventEmitter.emit('renderTodoFilter', [])
+
   }
 
   editTitle(event) {
@@ -128,6 +130,12 @@ export default class Todo extends Component {
   openModalWindow(event) {
     eventEmitter.emit('deleteTodo', [+event.target.dataset.destroyId])
     const modalWindow = document.querySelector('.modal')
+
     modalWindow.classList.add('modal--active', `modal${+event.target.dataset.destroyId}`)
+  }
+
+  updateTogglers() {
+    const currentTodos = document.querySelectorAll('.toggle')
+    currentTodos.forEach((toggler) => toggler.checked = true)
   }
 }

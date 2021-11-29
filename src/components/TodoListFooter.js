@@ -3,6 +3,8 @@ import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
 
 export default class TodoListFooter extends Component {
+  static completedTodos = Store.state.todos.filter((todo) => todo.completed)
+
   constructor() {
     super()
   }
@@ -13,7 +15,7 @@ export default class TodoListFooter extends Component {
   }
 
   clearCompleted() {
-    Store.state.todos = Store.state.todos.filter((todo) => !todo.completed)
+    Store.state.todos = Store.state.todos.filter((todo) => todo.completed)
   }
 
   render() {
@@ -50,7 +52,7 @@ export default class TodoListFooter extends Component {
 
     const clearCompletedButton = document.createElement('button')
     clearCompletedButton.className = 'clear-completed'
-    // clearCompletedButton.classList.add('invisible');
+    clearCompletedButton.classList.add('invisible');
     clearCompletedButton.innerText = 'Clear completed'
 
     infoBlock.appendChild(todoCount)
@@ -79,13 +81,17 @@ export default class TodoListFooter extends Component {
 
   update() {
     const footer = document.querySelector('.footer')
-    const todoCount = document.querySelector('.todo-count')
+    const clearCompletedButton = document.querySelector('.clear-completed')
     if (Store.state.todos.length > 0) {
-      footer.className = 'footer'
-      const activeTodos = Store.state.todos.filter((todo) => !todo.completed)
-      todoCount.innerText = `${activeTodos.length} items left`
+      footer.classList.remove('invisible')
     } else {
-      footer.classList.add('invisible');
+      footer.className = 'footer invisible'
+    }
+
+    if(Store.state.todos.find((todo) => todo.completed)) {
+      clearCompletedButton.classList.remove('invisible')
+    } else {
+      clearCompletedButton.className = 'clear-completed invisible'
     }
   }
 }
