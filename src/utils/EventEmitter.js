@@ -1,28 +1,27 @@
+import Store from './Store'
+
 class EventEmitter {
   constructor() {
-    this.events = {};
+    this.events = {}
   }
 
   subscribe(eventName, callback) {
     if (!this.events[eventName]) {
-      this.events[eventName] = [];
+      this.events[eventName] = []
     }
 
-    this.events[eventName].push(callback);
-
-    return this.events[eventName].filter((eventCallback) => callback !== eventCallback);
+    this.events[eventName].push(callback)
+    return this.events[eventName].filter((eventCallback) => callback !== eventCallback)
   }
 
   emit(eventName, args) {
-    const event = this.events[eventName];
+    const event = this.events[eventName]
     if (event) {
       event.forEach((callback) => {
-        callback.call(null, args);
-      });
+        callback.apply(null, args)
+      })
     }
   }
 }
 
-export default new EventEmitter();
-
-const unsubcribe = EventEmitter.subscribe('renderTodoList', () => {});
+export default new EventEmitter()

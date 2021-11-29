@@ -1,40 +1,48 @@
-import Component from '../utils/Component';
-import Store from '../utils/Store';
-import Todo from './Todo';
+import Component from '../utils/Component'
+import eventEmitter from '../utils/EventEmitter'
+import Store from '../utils/Store'
+import Todo from './Todo'
+import TodoList from './TodoList'
 
-class NewTodoInput extends Component {
+export default class NewTodoInput extends Component {
   constructor() {
-    super();
-    this.root = document.querySelector('.todoapp');
+    super()
   }
 
   render() {
-    const header = document.createElement('header');
-    header.className = 'header';
+    const header = document.createElement('header')
+    header.className = 'header'
 
-    const appTitle = document.createElement('h1');
-    appTitle.innerText = 'todos';
+    const appTitle = document.createElement('h1')
+    appTitle.innerText = 'todos'
 
-    const todoInput = document.createElement('input');
-    todoInput.className = 'new-todo';
-    todoInput.placeholder = 'What needs to be done?';
+    const todoInput = document.createElement('input')
+    todoInput.className = 'new-todo'
+    todoInput.placeholder = 'What needs to be done?'
 
-    header.appendChild(appTitle);
-    header.appendChild(todoInput);
+    header.appendChild(appTitle)
+    header.appendChild(todoInput)
+    todoInput.focus()
+    todoInput.addEventListener('keydown', (event) => this.addTodo(event))
 
-    todoInput.addEventListener('keydown', this.addTodo());
+    return header
+  }
 
-    todoInput.focus();
+  update() {
+    const input = document.querySelector('.new-todo')
+    input.value = ''
+    input.focus()
   }
 
   addTodo(event) {
     if (!event.target.value || event.key !== 'Enter') {
-      return;
+      return
     }
 
-    Store.state.todos.push(new Todo(event.target.value));
-    this.render();
+    Store.state.todos.push(new Todo(event.target.value))
+    this.update()
+    eventEmitter.emit('renderTodoList', [])
   }
 }
 
-const mainInput = new NewTodoInput();
+const mainInput = new NewTodoInput()

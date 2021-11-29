@@ -1,12 +1,12 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/components/NewTodoInput.js',
+    app: './src/index.js',
   },
   devtool: 'inline-source-map',
   devServer: {
@@ -45,7 +45,6 @@ module.exports = {
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
-
     ],
   },
-};
+}
