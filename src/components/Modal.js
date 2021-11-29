@@ -64,6 +64,7 @@ export default class Modal extends Component {
     const todoList = document.querySelector('.todo-list')
     todoList.removeChild(todoToDelete)
     eventEmitter.emit('renderTodoList', [])
+    eventEmitter.emit('renderTodoFilter', [])
   }
 }
 

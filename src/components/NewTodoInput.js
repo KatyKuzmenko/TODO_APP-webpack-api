@@ -42,6 +42,8 @@ export default class NewTodoInput extends Component {
     Store.state.todos.push(new Todo(event.target.value))
     this.update()
     eventEmitter.emit('renderTodoList', [])
+    eventEmitter.emit('renderTodoFilter', [])
+    eventEmitter.emit('countNotCompletedTodos', [])
   }
 }
 

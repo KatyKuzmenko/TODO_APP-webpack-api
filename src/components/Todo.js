@@ -128,7 +128,6 @@ export default class Todo extends Component {
   openModalWindow(event) {
     eventEmitter.emit('deleteTodo', [+event.target.dataset.destroyId])
     const modalWindow = document.querySelector('.modal')
-
     modalWindow.classList.add('modal--active', `modal${+event.target.dataset.destroyId}`)
   }
 }

@@ -3,11 +3,8 @@ import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
 
 export default class TodoListFooter extends Component {
-  static completedTodos = Store.state.todos.filter((todo) => todo.completed)
-
   constructor() {
     super()
-    eventEmitter.subscribe('countNotCompletedTodos', () => this.completedTodos.length)
   }
 
   setFilter(event) {
@@ -82,8 +79,13 @@ export default class TodoListFooter extends Component {
 
   update() {
     const footer = document.querySelector('.footer')
+    const todoCount = document.querySelector('.todo-count')
     if (Store.state.todos.length > 0) {
       footer.className = 'footer'
+      const activeTodos = Store.state.todos.filter((todo) => !todo.completed)
+      todoCount.innerText = `${activeTodos.length} items left`
+    } else {
+      footer.classList.add('invisible');
     }
   }
 }
