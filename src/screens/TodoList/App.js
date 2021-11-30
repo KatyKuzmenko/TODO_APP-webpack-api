@@ -13,8 +13,13 @@ class App {
     this.modal = new Modal()
     eventEmitter.subscribe('renderTodoInput', this.todoInput.update)
     eventEmitter.subscribe('renderTodoList', this.todoList.update)
-    eventEmitter.subscribe('renderTodoFilter', this.todoFilter.update)
+    eventEmitter.subscribe('renderTodoFilter', this.todoFilter.updateFooterVisibility)
     eventEmitter.subscribe('renderModalWindow', this.modal.render())
+    eventEmitter.subscribe('updateCounter', this.todoFilter.updateCounter)
+    eventEmitter.subscribe('updateClearButton', this.todoFilter.updateClearButton)
+    eventEmitter.subscribe('updateAllToggler', this.todoList.updateAllToggler)
+    eventEmitter.subscribe('updateClearButton', this.todoFilter.updateClearButton)
+    eventEmitter.subscribe('setFilter', this.todoFilter.setFilter)
   }
 
   render() {

@@ -9,15 +9,6 @@ export default class TodoListFooter extends Component {
     super()
   }
 
-  setFilter(event) {
-    Store.state.filterType = event.target.dataset.filter
-    event.target.className = 'selected'
-  }
-
-  clearCompleted() {
-    Store.state.todos = Store.state.todos.filter((todo) => todo.completed)
-  }
-
   render() {
     const infoBlock = document.createElement('footer')
     infoBlock.classList.add('footer', 'invisible')
@@ -52,7 +43,6 @@ export default class TodoListFooter extends Component {
 
     const clearCompletedButton = document.createElement('button')
     clearCompletedButton.className = 'clear-completed'
-    clearCompletedButton.classList.add('invisible');
     clearCompletedButton.innerText = 'Clear completed'
 
     infoBlock.appendChild(todoCount)
@@ -66,33 +56,74 @@ export default class TodoListFooter extends Component {
 
     infoBlock.appendChild(clearCompletedButton)
 
-    const filterLinks = document.querySelectorAll('[data-type="filter"]')
+    filterLinkAll.addEventListener('click', (event) => this.setFilter(event.target.dataset.filter))
+    filterLinkActive.addEventListener('click', (event) => this.setFilter(event.target.dataset.filter))
+    filterLinkCompleted.addEventListener('click', (event) => this.setFilter(event.target.dataset.filter))
 
-    filterLinks.forEach((filter) => {
-      filter.addEventListener('click', (event) => this.setFilter(event))
-
-      if (clearCompletedButton) {
-        clearCompletedButton.addEventListener('click', () => this.clearCompleted())
-      }
-    })
+    clearCompletedButton.addEventListener('click', (event) => this.clearCompleted(event))
 
     return infoBlock
   }
 
-  update() {
-    const footer = document.querySelector('.footer')
-    const clearCompletedButton = document.querySelector('.clear-completed')
-    if (Store.state.todos.length > 0) {
-      footer.classList.remove('invisible')
-    } else {
-      footer.className = 'footer invisible'
-    }
+  setFilter(type) {
+    Store.state.filterType = type
+    const filters = document.querySelectorAll('[data-filter]')
+    filters.forEach((filter) => {
+      filter.classList.remove('selected')
+    })
+    const activeFilter = document.querySelector(`[data-filter="${type}"]`)
+    activeFilter.classList.add('selected')
+    const togglers = document.querySelectorAll('.toggle')
+    togglers.forEach((toggler) => {
+      const item = toggler.closest('.todo-list__item')
 
-    if(Store.state.todos.find((todo) => todo.completed)) {
-      clearCompletedButton.classList.remove('invisible')
-    } else {
-      clearCompletedButton.className = 'clear-completed invisible'
-    }
+      switch (type) {
+        case 'all':
+          item.hidden = false
+          break
+
+        case 'active':
+          item.hidden = toggler.checked
+          break
+        
+        case 'completed':
+          item.hidden = !toggler.checked
+          break
+      }
+    })
+  }
+
+  updateFooterVisibility() {
+    const footer = document.querySelector('.footer')
+    const todos = document.querySelectorAll('.todo-list__item')
+    footer.classList.toggle('invisible', todos.length === 0)
+  }
+
+  updateClearButton() {
+    const clearCompletedButton = document.querySelector('.clear-completed')
+    const completedTogglers = document.querySelectorAll('.toggle:checked')
+    clearCompletedButton.hidden = completedTogglers.length === 0
+  }
+
+  updateCounter() {
+    const counter = document.querySelector('.todo-count')
+    const notCompletedTogglers = document.querySelectorAll('.toggle:not(:checked)')
+    counter.innerText = `${notCompletedTogglers.length} items left`
+    eventEmitter.emit('updateClearButton', [])
+    eventEmitter.emit('updateAllToggler', [])
+    eventEmitter.emit('setFilter', [Store.state.filterType])
+  }
+
+  clearCompleted() {
+    Store.state.todos = Store.state.todos.filter((todo) => !todo.completed)
+
+    const completedTogglers = document.querySelectorAll('.toggle:checked')
+    completedTogglers.forEach((toggler) => {
+      toggler.closest('.todo-list__item').remove()
+    })
+    eventEmitter.emit('updateCounter', [])
+    eventEmitter.emit('renderTodoList', [])
+    eventEmitter.emit('renderTodoFilter', [])
   }
 }
 

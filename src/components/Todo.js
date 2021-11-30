@@ -80,13 +80,8 @@ export default class Todo extends Component {
     this.completed = event.target.checked
     const item = document.querySelector(`[data-todo-id="${event.target.dataset.inputId}"]`)
 
-    if (event.target.checked) {
-      item.classList.add('completed')
-    } else {
-      item.classList.remove('completed')
-    }
-    eventEmitter.emit('renderTodoFilter', [])
-
+    event.target.closest('.todo-list__item').classList.toggle('completed', event.target.checked)
+    eventEmitter.emit('updateCounter', [])
   }
 
   editTitle(event) {
@@ -132,10 +127,5 @@ export default class Todo extends Component {
     const modalWindow = document.querySelector('.modal')
 
     modalWindow.classList.add('modal--active', `modal${+event.target.dataset.destroyId}`)
-  }
-
-  updateTogglers() {
-    const currentTodos = document.querySelectorAll('.toggle')
-    currentTodos.forEach((toggler) => toggler.checked = true)
   }
 }

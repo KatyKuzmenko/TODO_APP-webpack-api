@@ -21,7 +21,7 @@ export default class TodoList extends Component {
     toggleAllLabel.htmlFor = 'toggle-all'
 
     if (toggleAllCheckbox) {
-      toggleAllCheckbox.addEventListener('change', (event) => this.toggleAll(event.target.checked))
+      toggleAllCheckbox.addEventListener('change', (event) => this.toggleAll(event))
     }
 
     main.appendChild(toggleAllContainer)
@@ -34,18 +34,28 @@ export default class TodoList extends Component {
 
   update() {
     const main = document.querySelector('.main')
-    if (Store.state.todos.length > 0) {
-      main.classList.remove('invisible')
-    } else {
-      main.className = 'main invisible'
-    }
+    const todos = document.querySelectorAll('.todo-list__item')
+    main.classList.toggle('invisible', todos.length === 0)
   }
 
-  toggleAll(completed) {
+  toggleAll(event) {
     Store.state.todos.forEach((todo) => {
-      todo.completed = completed
+      todo.completed = event.target.checked
     })
+    const togglers = document.querySelectorAll('.toggle')
+    for (const toggler of togglers) {
+      toggler.checked = event.target.checked
+      toggler.closest('.todo-list__item').classList.toggle('completed', event.target.checked)
+    }
+    eventEmitter.emit('renderTodoList', [])
+    eventEmitter.emit('updateCounter', [])
   }
-}
+
+  updateAllToggler() {
+    const notCompletedTogglers = document.querySelectorAll('.toggle:not(:checked)')
+    const allToggler = document.querySelector('.toggle-all')
+    allToggler.checked = notCompletedTogglers.length === 0
+  }
+} 
 
 const todoList = new TodoList()
