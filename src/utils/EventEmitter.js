@@ -1,5 +1,3 @@
-import Store from './Store'
-
 class EventEmitter {
   constructor() {
     this.events = {}

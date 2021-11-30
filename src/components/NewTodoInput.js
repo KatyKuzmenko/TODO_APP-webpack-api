@@ -2,7 +2,6 @@ import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
 import Todo from './Todo'
-import TodoList from './TodoList'
 
 export default class NewTodoInput extends Component {
   constructor() {
