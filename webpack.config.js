@@ -25,7 +25,7 @@ module.exports = {
     }),
   ],
   output: {
-    filename: 'index.js',
+    filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
     publicPath: '/',
@@ -34,7 +34,7 @@ module.exports = {
     rules: [
       {
         test: /\.(scss|css)$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,

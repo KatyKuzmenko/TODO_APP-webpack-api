@@ -2,7 +2,6 @@ import NewTodoInput from '../../components/NewTodoInput'
 import TodoList from '../../components/TodoList'
 import TodoListFooter from '../../components/TodoListFooter'
 import eventEmitter from '../../utils/EventEmitter'
-import '../../style.css'
 import Modal from '../../components/Modal'
 
 class App {
