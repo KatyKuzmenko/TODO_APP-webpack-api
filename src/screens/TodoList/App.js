@@ -2,7 +2,10 @@ import NewTodoInput from '../../components/NewTodoInput'
 import TodoList from '../../components/TodoList'
 import TodoListFooter from '../../components/TodoListFooter'
 import eventEmitter from '../../utils/EventEmitter'
+import '../../style.css'
 import Modal from '../../components/Modal'
+import Store from '../../utils/Store'
+import Todo from '../../components/Todo'
 
 class App {
   constructor() {
@@ -19,6 +22,9 @@ class App {
     eventEmitter.subscribe('updateAllToggler', this.todoList.updateAllToggler)
     eventEmitter.subscribe('updateClearButton', this.todoFilter.updateClearButton)
     eventEmitter.subscribe('setFilter', this.todoFilter.setFilter)
+    eventEmitter.subscribe('initTodos', this.todoList.updateTodos)
+    eventEmitter.emit('initTodos', [Store.state.todos])
+
   }
 
   render() {

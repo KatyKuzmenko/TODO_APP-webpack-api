@@ -1,3 +1,4 @@
+import { createTodo, getTodos } from '../API/api'
 import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
@@ -38,7 +39,11 @@ export default class NewTodoInput extends Component {
       return
     }
 
-    Store.state.todos.push(new Todo(event.target.value))
+    createTodo(event.target.value)
+      .then(console.log('ok'))
+      .catch(error => {
+        console.warn(error)
+      })
     this.update()
     eventEmitter.emit('renderTodoList', [])
     eventEmitter.emit('renderTodoFilter', [])

@@ -1,6 +1,7 @@
 import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
+import Todo from './Todo'
 
 export default class TodoList extends Component {
   render() {
@@ -33,15 +34,14 @@ export default class TodoList extends Component {
   }
 
   update() {
+    eventEmitter.emit('initTodos', [Store.state.todos])
     const main = document.querySelector('.main')
     const todos = document.querySelectorAll('.todo-list__item')
     main.classList.toggle('invisible', todos.length === 0)
   }
 
   toggleAll(event) {
-    Store.state.todos.forEach((todo) => {
-      todo.completed = event.target.checked
-    })
+    Store.dispatch({type: 'toggleAll', iscompleted: event.target.checked})
     const togglers = document.querySelectorAll('.toggle')
     for (const toggler of togglers) {
       toggler.checked = event.target.checked
@@ -55,6 +55,10 @@ export default class TodoList extends Component {
     const notCompletedTogglers = document.querySelectorAll('.toggle:not(:checked)')
     const allToggler = document.querySelector('.toggle-all')
     allToggler.checked = notCompletedTogglers.length === 0
+  }
+
+  updateTodos() {
+    Store.state.todos.forEach(todo => new Todo(todo))
   }
 } 
 

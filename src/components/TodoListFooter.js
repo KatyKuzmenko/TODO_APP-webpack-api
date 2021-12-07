@@ -3,7 +3,7 @@ import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
 
 export default class TodoListFooter extends Component {
-  static completedTodos = Store.state.todos.filter((todo) => todo.completed)
+  static completedTodos = Store.state.todos.filter((todo) => todo.iscompleted)
 
   constructor() {
     super()
@@ -109,8 +109,8 @@ export default class TodoListFooter extends Component {
     const counter = document.querySelector('.todo-count')
     const notCompletedTogglers = document.querySelectorAll('.toggle:not(:checked)')
     counter.innerText = `${notCompletedTogglers.length} items left`
-    eventEmitter.emit('updateClearButton', [])
-    eventEmitter.emit('updateAllToggler', [])
+    eventEmitter.emit('updateClearButton')
+    eventEmitter.emit('updateAllToggler')
     eventEmitter.emit('setFilter', [Store.state.filterType])
   }
 
@@ -121,9 +121,9 @@ export default class TodoListFooter extends Component {
     completedTogglers.forEach((toggler) => {
       toggler.closest('.todo-list__item').remove()
     })
-    eventEmitter.emit('updateCounter', [])
-    eventEmitter.emit('renderTodoList', [])
-    eventEmitter.emit('renderTodoFilter', [])
+    eventEmitter.emit('updateCounter')
+    eventEmitter.emit('renderTodoList')
+    eventEmitter.emit('renderTodoFilter')
   }
 }
 

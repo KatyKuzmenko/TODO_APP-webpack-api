@@ -4,16 +4,15 @@ import '../style.css'
 import eventEmitter from '../utils/EventEmitter'
 
 export default class Todo extends Component {
-  constructor(title) {
+  constructor(todo) {
     super()
-    this.id = +new Date()
-    this.title = title
-    this.completed = false
+    this.id = todo.id
+    this.title = todo.title
+    this.iscompleted = todo.iscompleted
     this.render()
   }
 
   render() {
-    super.render()
     const listItem = document.createElement('li')
     listItem.className = 'todo-list__item'
     listItem.dataset.todoId = `${this.id}`
@@ -43,7 +42,6 @@ export default class Todo extends Component {
     editInput.id = `${this.id}`
     editInput.value = `${this.title}`
     const list = document.querySelector('.todo-list')
-
     list.appendChild(listItem)
     listItem.appendChild(viewDiv)
     viewDiv.appendChild(todoCheckbox)
@@ -73,9 +71,13 @@ export default class Todo extends Component {
 
       edit.addEventListener('blur', (event) => this.setNewTitleOnBlur(event))
     })
+
+    return list
   }
 
   toggleTodo(event) {
+    Store.dispatch({type: 'updateStatus', id: event.target.dataset.inputId, status: event.target.checked})
+
     const selectedTodo = Store.state.todos.find((todo) => todo.id === +event.target.dataset.inputId)
     this.completed = event.target.checked
     const item = document.querySelector(`[data-todo-id="${event.target.dataset.inputId}"]`)
@@ -98,6 +100,7 @@ export default class Todo extends Component {
     if (!event.target.value.trim() || event.key !== 'Enter') {
       return
     }
+    Store.dispatch({type: 'updateTitle', id: +event.target.id, title: event.target.value})
 
     const selectedTodo = Store.state.todos.find((todo) => todo.id === +event.target.id)
     selectedTodo.title = event.target.value
@@ -112,6 +115,7 @@ export default class Todo extends Component {
     if (!event.target.value.trim()) {
       return
     }
+    Store.dispatch({type: 'updateTitle', id: +event.target.id, title: event.target.value})
 
     const selectedTodo = Store.state.todos.find((todo) => todo.id === +event.target.id)
     selectedTodo.title = event.target.value

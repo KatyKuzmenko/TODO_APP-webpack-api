@@ -56,10 +56,9 @@ export default class Modal extends Component {
   }
 
   deleteTodoAndCloseModalWindow() {
-    console.log(this.id)
+    Store.dispatch({type: 'deleteTodo', id: this.id})
     const modalWindow = document.querySelector(`.modal${this.id}`)
     modalWindow.classList.remove('modal--active', `modal${this.id}`)
-    Store.state.todos = Store.state.todos.filter((todo) => todo.id !== this.id)
     const todoToDelete = document.querySelector(`[data-todo-id="${this.id}"]`)
     const todoList = document.querySelector('.todo-list')
     todoList.removeChild(todoToDelete)
