@@ -55,6 +55,7 @@ export default class Store {
             console.warn(error)
           })
         break
+
       case 'deleteCompletedTodos':
         deleteCompletedTodos()
           .then((todos) => {
@@ -65,6 +66,7 @@ export default class Store {
             console.warn(error)
           })
         break
+
       case 'updateTitle':
         updateTodo(action.id, action.title)
           .then((todos) => {
@@ -75,6 +77,7 @@ export default class Store {
             console.warn(error)
           })
         break
+
       case 'updateStatus':
         updateStatus(action.id, action.status)
           .then((todos) => {
@@ -85,6 +88,7 @@ export default class Store {
             console.warn(error)
           })
         break
+
       case 'toggleAll':
         toggleAll(action.iscompleted)
           .then((todos) => {
