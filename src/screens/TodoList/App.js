@@ -14,7 +14,7 @@ class App {
     this.todoFilter = new TodoListFooter()
     this.modal = new Modal()
     eventEmitter.subscribe('renderTodoInput', this.todoInput.update)
-    eventEmitter.subscribe('renderTodoList', this.todoList.update)
+    eventEmitter.subscribe('updateTodos', this.todoList.update)
     eventEmitter.subscribe('renderTodoFilter', this.todoFilter.updateFooterVisibility)
     eventEmitter.subscribe('renderModalWindow', this.modal.render())
     eventEmitter.subscribe('updateCounter', this.todoFilter.updateCounter)

@@ -1,5 +1,8 @@
+import { store1 } from '../store/createStore'
 import Component from '../utils/Component'
 import Store from '../utils/Store'
+import { addTodo } from '../store/actions'
+import eventEmitter from '../utils/EventEmitter'
 
 export default class NewTodoInput extends Component {
   constructor() {
@@ -36,8 +39,9 @@ export default class NewTodoInput extends Component {
       return
     }
 
-    Store.updateData({ type: 'addTodo', title: event.target.value })
+    store1.dispatch(addTodo(event.target.value))
     this.update()
+    eventEmitter.emit('dispatch')
   }
 }
 

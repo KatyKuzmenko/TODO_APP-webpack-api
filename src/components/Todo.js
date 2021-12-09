@@ -2,6 +2,8 @@ import Component from '../utils/Component'
 import Store from '../utils/Store'
 import '../style.css'
 import eventEmitter from '../utils/EventEmitter'
+import { store1 } from '../store/createStore'
+import { toggleTodo } from '../store/actions'
 
 export default class Todo extends Component {
   constructor(todo) {
@@ -77,13 +79,9 @@ export default class Todo extends Component {
   }
 
   toggleTodo(event) {
-    Store.updateData({
-      type: 'updateStatus',
-      id: event.target.dataset.inputId,
-      status: event.target.checked,
-    })
+    store1.dispatch(toggleTodo(+event.target.dataset.inputId))
 
-    const selectedTodo = Store.state.todos.find((todo) => todo.id === +event.target.dataset.inputId)
+    const selectedTodo = store1.getState().find((todo) => todo.id === +event.target.dataset.inputId)
     this.iscompleted = event.target.checked
     const item = document.querySelector(`[data-todo-id="${event.target.dataset.inputId}"]`)
 

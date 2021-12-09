@@ -1,9 +1,10 @@
 import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
+import { store1 } from '../store/createStore'
 
 export default class TodoListFooter extends Component {
-  static completedTodos = Store.state.todos.filter((todo) => todo.iscompleted)
+  static completedTodos = store1.getState().filter((todo) => todo.iscompleted)
 
   render() {
     const infoBlock = document.createElement('footer')

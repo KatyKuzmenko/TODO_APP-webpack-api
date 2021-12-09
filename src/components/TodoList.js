@@ -1,7 +1,9 @@
+import { store1 } from '../store/createStore'
 import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
 import Todo from './Todo'
+import { toggleAll } from '../store/actions'
 
 export default class TodoList extends Component {
   render() {
@@ -45,7 +47,8 @@ export default class TodoList extends Component {
   }
 
   toggleAll(event) {
-    Store.updateData({ type: 'toggleAll', iscompleted: event.target.checked })
+    store1.dispatch(toggleAll(event.target.checked))
+    eventEmitter.emit('dispatch')
   }
 
   updateAllToggler() {
