@@ -1,5 +1,5 @@
 import reducer from '../store/reducer'
-import { createStore } from '../store/createStore'
+import { createStore } from '../store/store'
 import {
   createTodo,
   deleteTodo,
@@ -11,10 +11,12 @@ import {
 } from '../API/api'
 
 export default class Store {
-  constructor() {
-    createStore(reducer, [])
-  }
+  static store = []
   static filterType = 'all'
+
+  dispatch(action) {
+    state = reduce(state, action)
+  }
   
   // static updateData(action) {
   //   switch (action.type) {

@@ -1,8 +1,9 @@
-import { store1 } from '../store/createStore'
+import { store } from '../store/store'
 import Component from '../utils/Component'
 import Store from '../utils/Store'
-import { addTodo } from '../store/actions'
+import { createTodo } from '../API/api'
 import eventEmitter from '../utils/EventEmitter'
+import { addTodo } from '../store/actions'
 
 export default class NewTodoInput extends Component {
   constructor() {
@@ -39,7 +40,10 @@ export default class NewTodoInput extends Component {
       return
     }
 
-    store1.dispatch(addTodo(event.target.value))
+    store.dispatch(addTodo(event.target.value))
+    createTodo(event.target.value)
+      .then(todos => todos)
+      .catch(err => console.warn(err))
     this.update()
     eventEmitter.emit('dispatch')
   }

@@ -1,6 +1,9 @@
 import Component from '../utils/Component'
 import Store from '../utils/Store'
 import eventEmitter from '../utils/EventEmitter'
+import { store } from '../store/store'
+import { removeTodo } from '../store/actions'
+import { deleteTodo } from '../API/api'
 
 export default class Modal extends Component {
   constructor() {
@@ -56,7 +59,15 @@ export default class Modal extends Component {
   }
 
   deleteTodoAndCloseModalWindow() {
-    Store.updateData({ type: 'deleteTodo', id: this.id })
+    store.dispatch(removeTodo(this.id))
+    eventEmitter.emit('dispatch')
+    deleteTodo(this.id)
+      .then(todos => {
+        console.log('Success:', todos)
+      })
+      .catch(error => {
+        console.warn(error)
+      })
     const modalWindow = document.querySelector(`.modal${this.id}`)
     modalWindow.classList.remove('modal--active', `modal${this.id}`)
   }

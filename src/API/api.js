@@ -52,7 +52,7 @@ export const updateStatus = (todoId, iscompleted) => {
   return patch(`/todos/${todoId}`, { iscompleted })
 }
 
-export const toggleAll = (iscompleted) => {
+export const toggleAllTodos = (iscompleted) => {
   return patch('/todos', { iscompleted })
 }
 

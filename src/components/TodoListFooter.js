@@ -1,10 +1,11 @@
 import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
-import { store1 } from '../store/createStore'
+import { store } from '../store/store'
+import { clearTodos } from '../store/actions'
 
 export default class TodoListFooter extends Component {
-  static completedTodos = store1.getState().filter((todo) => todo.iscompleted)
+  static completedTodos = store.getState().filter((todo) => todo.iscompleted)
 
   render() {
     const infoBlock = document.createElement('footer')
@@ -116,7 +117,7 @@ export default class TodoListFooter extends Component {
   }
 
   clearCompleted() {
-    Store.updateData({ type: 'deleteCompletedTodos' })
+    store.dispatch(clearTodos())
   }
 }
 

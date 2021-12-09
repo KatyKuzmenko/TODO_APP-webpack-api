@@ -1,9 +1,10 @@
-import { store1 } from '../store/createStore'
+import { store } from '../store/store'
 import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
 import Todo from './Todo'
 import { toggleAll } from '../store/actions'
+import { toggleAllTodos } from '../API/api'
 
 export default class TodoList extends Component {
   render() {
@@ -47,8 +48,11 @@ export default class TodoList extends Component {
   }
 
   toggleAll(event) {
-    store1.dispatch(toggleAll(event.target.checked))
+    store.dispatch(toggleAll(event.target.checked))
     eventEmitter.emit('dispatch')
+    toggleAllTodos(event.target.checked)
+      .then(todos => todos)
+      .catch(err => console.warn(err))
   }
 
   updateAllToggler() {

@@ -1,6 +1,7 @@
 import reducer from './reducer'
 import eventEmitter from '../utils/EventEmitter'
 import { addTodo } from './actions'
+import { getTodos } from '../API/api'
 
 export const createStore = (reduce, initialState) => {
   let state = initialState
@@ -17,6 +18,6 @@ export const createStore = (reduce, initialState) => {
 
 
 
-export const store1 = createStore(reducer, [])
-eventEmitter.subscribe('dispatch', () => console.log(store1.getState()))
-console.log(store1.getState())
+export const store = createStore(reducer, [])
+eventEmitter.subscribe('dispatch', () => console.log(store.getState()))
+console.log(store.getState())
