@@ -1,8 +1,5 @@
-import { createTodo, getTodos } from '../API/api'
 import Component from '../utils/Component'
-import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
-import Todo from './Todo'
 
 export default class NewTodoInput extends Component {
   constructor() {
@@ -39,15 +36,8 @@ export default class NewTodoInput extends Component {
       return
     }
 
-    createTodo(event.target.value)
-      .then(console.log('ok'))
-      .catch(error => {
-        console.warn(error)
-      })
+    Store.updateData({ type: 'addTodo', title: event.target.value })
     this.update()
-    eventEmitter.emit('renderTodoList', [])
-    eventEmitter.emit('renderTodoFilter', [])
-    eventEmitter.emit('updateCounter', [])
   }
 }
 

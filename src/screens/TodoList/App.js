@@ -5,10 +5,10 @@ import eventEmitter from '../../utils/EventEmitter'
 import '../../style.css'
 import Modal from '../../components/Modal'
 import Store from '../../utils/Store'
-import Todo from '../../components/Todo'
 
 class App {
   constructor() {
+    this.store = new Store()
     this.todoInput = new NewTodoInput()
     this.todoList = new TodoList()
     this.todoFilter = new TodoListFooter()
@@ -23,8 +23,6 @@ class App {
     eventEmitter.subscribe('updateClearButton', this.todoFilter.updateClearButton)
     eventEmitter.subscribe('setFilter', this.todoFilter.setFilter)
     eventEmitter.subscribe('initTodos', this.todoList.updateTodos)
-    eventEmitter.emit('initTodos', [Store.state.todos])
-
   }
 
   render() {

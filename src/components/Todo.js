@@ -16,6 +16,9 @@ export default class Todo extends Component {
     const listItem = document.createElement('li')
     listItem.className = 'todo-list__item'
     listItem.dataset.todoId = `${this.id}`
+    if (this.iscompleted) {
+      listItem.classList.add('completed')
+    }
 
     const viewDiv = document.createElement('div')
     viewDiv.className = `view${this.id}`
@@ -25,7 +28,7 @@ export default class Todo extends Component {
     todoCheckbox.dataset.inputId = `${this.id}`
     todoCheckbox.className = 'toggle'
     todoCheckbox.type = 'checkbox'
-    todoCheckbox.checked = this.completed
+    todoCheckbox.checked = this.iscompleted
 
     const todoLabel = document.createElement('label')
     todoLabel.className = 'todo-title'
@@ -71,15 +74,17 @@ export default class Todo extends Component {
 
       edit.addEventListener('blur', (event) => this.setNewTitleOnBlur(event))
     })
-
-    return list
   }
 
   toggleTodo(event) {
-    Store.dispatch({type: 'updateStatus', id: event.target.dataset.inputId, status: event.target.checked})
+    Store.updateData({
+      type: 'updateStatus',
+      id: event.target.dataset.inputId,
+      status: event.target.checked,
+    })
 
     const selectedTodo = Store.state.todos.find((todo) => todo.id === +event.target.dataset.inputId)
-    this.completed = event.target.checked
+    this.iscompleted = event.target.checked
     const item = document.querySelector(`[data-todo-id="${event.target.dataset.inputId}"]`)
 
     event.target.closest('.todo-list__item').classList.toggle('completed', event.target.checked)
@@ -100,30 +105,16 @@ export default class Todo extends Component {
     if (!event.target.value.trim() || event.key !== 'Enter') {
       return
     }
-    Store.dispatch({type: 'updateTitle', id: +event.target.id, title: event.target.value})
 
-    const selectedTodo = Store.state.todos.find((todo) => todo.id === +event.target.id)
-    selectedTodo.title = event.target.value
-    const todoItem = document.querySelector(`.view${event.target.id}`)
-    const todoTitle = document.querySelector(`[data-label-id="${event.target.id}"]`)
-    todoTitle.innerText = event.target.value
-    todoItem.classList.remove('invisible')
-    event.target.classList.add('invisible')
+    Store.updateData({ type: 'updateTitle', id: +event.target.id, title: event.target.value })
   }
 
   setNewTitleOnBlur(event) {
     if (!event.target.value.trim()) {
       return
     }
-    Store.dispatch({type: 'updateTitle', id: +event.target.id, title: event.target.value})
 
-    const selectedTodo = Store.state.todos.find((todo) => todo.id === +event.target.id)
-    selectedTodo.title = event.target.value
-    const todoItem = document.querySelector(`.view${event.target.id}`)
-    const todoTitle = document.querySelector(`[data-label-id="${event.target.id}"]`)
-    todoTitle.innerText = event.target.value
-    todoItem.classList.remove('invisible')
-    event.target.classList.add('invisible')
+    Store.updateData({ type: 'updateTitle', id: +event.target.id, title: event.target.value })
   }
 
   openModalWindow(event) {

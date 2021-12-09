@@ -6,9 +6,11 @@ import Todo from './Todo'
 export default class TodoList extends Component {
   render() {
     const main = document.createElement('section')
-    main.classList.add('main', 'invisible')
+    main.classList.add('main')
+
     const list = document.createElement('ul')
     list.className = 'todo-list'
+
     const toggleAllContainer = document.createElement('span')
     toggleAllContainer.className = 'toggle-all-container'
 
@@ -18,12 +20,12 @@ export default class TodoList extends Component {
     toggleAllCheckbox.type = 'checkbox'
     toggleAllCheckbox.checked = false
 
-    const toggleAllLabel = document.createElement('label')
-    toggleAllLabel.htmlFor = 'toggle-all'
-
     if (toggleAllCheckbox) {
       toggleAllCheckbox.addEventListener('change', (event) => this.toggleAll(event))
     }
+
+    const toggleAllLabel = document.createElement('label')
+    toggleAllLabel.htmlFor = 'toggle-all'
 
     main.appendChild(toggleAllContainer)
     toggleAllContainer.appendChild(toggleAllCheckbox)
@@ -34,6 +36,8 @@ export default class TodoList extends Component {
   }
 
   update() {
+    const list = document.querySelector('.todo-list')
+    list.innerHTML = ''
     eventEmitter.emit('initTodos', [Store.state.todos])
     const main = document.querySelector('.main')
     const todos = document.querySelectorAll('.todo-list__item')
@@ -41,14 +45,7 @@ export default class TodoList extends Component {
   }
 
   toggleAll(event) {
-    Store.dispatch({type: 'toggleAll', iscompleted: event.target.checked})
-    const togglers = document.querySelectorAll('.toggle')
-    for (const toggler of togglers) {
-      toggler.checked = event.target.checked
-      toggler.closest('.todo-list__item').classList.toggle('completed', event.target.checked)
-    }
-    eventEmitter.emit('renderTodoList', [])
-    eventEmitter.emit('updateCounter', [])
+    Store.updateData({ type: 'toggleAll', iscompleted: event.target.checked })
   }
 
   updateAllToggler() {
@@ -58,8 +55,8 @@ export default class TodoList extends Component {
   }
 
   updateTodos() {
-    Store.state.todos.forEach(todo => new Todo(todo))
+    Store.state.todos.forEach((todo) => new Todo(todo))
   }
-} 
+}
 
 const todoList = new TodoList()

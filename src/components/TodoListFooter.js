@@ -5,10 +5,6 @@ import Store from '../utils/Store'
 export default class TodoListFooter extends Component {
   static completedTodos = Store.state.todos.filter((todo) => todo.iscompleted)
 
-  constructor() {
-    super()
-  }
-
   render() {
     const infoBlock = document.createElement('footer')
     infoBlock.classList.add('footer', 'invisible')
@@ -57,8 +53,12 @@ export default class TodoListFooter extends Component {
     infoBlock.appendChild(clearCompletedButton)
 
     filterLinkAll.addEventListener('click', (event) => this.setFilter(event.target.dataset.filter))
-    filterLinkActive.addEventListener('click', (event) => this.setFilter(event.target.dataset.filter))
-    filterLinkCompleted.addEventListener('click', (event) => this.setFilter(event.target.dataset.filter))
+    filterLinkActive.addEventListener('click', (event) =>
+      this.setFilter(event.target.dataset.filter)
+    )
+    filterLinkCompleted.addEventListener('click', (event) =>
+      this.setFilter(event.target.dataset.filter)
+    )
 
     clearCompletedButton.addEventListener('click', (event) => this.clearCompleted(event))
 
@@ -85,7 +85,7 @@ export default class TodoListFooter extends Component {
         case 'active':
           item.hidden = toggler.checked
           break
-        
+
         case 'completed':
           item.hidden = !toggler.checked
           break
@@ -115,15 +115,7 @@ export default class TodoListFooter extends Component {
   }
 
   clearCompleted() {
-    Store.state.todos = Store.state.todos.filter((todo) => !todo.completed)
-
-    const completedTogglers = document.querySelectorAll('.toggle:checked')
-    completedTogglers.forEach((toggler) => {
-      toggler.closest('.todo-list__item').remove()
-    })
-    eventEmitter.emit('updateCounter')
-    eventEmitter.emit('renderTodoList')
-    eventEmitter.emit('renderTodoFilter')
+    Store.updateData({ type: 'deleteCompletedTodos' })
   }
 }
 
