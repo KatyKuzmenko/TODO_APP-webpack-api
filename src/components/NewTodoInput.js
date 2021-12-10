@@ -40,11 +40,15 @@ export default class NewTodoInput extends Component {
       return
     }
 
-    store.dispatch(addTodo(event.target.value))
     createTodo(event.target.value)
-      .then(todos => todos)
-      .catch(err => console.warn(err))
+      .then((todos) => todos)
+      .catch((err) => console.warn(err))
+    store.dispatch(addTodo(+new Date(), event.target.value))
     this.update()
+    eventEmitter.emit('updateTodos')
+    eventEmitter.emit('updateTodoFilter')
+    eventEmitter.emit('updateCounter')
+    eventEmitter.emit('updateClearButton')
     eventEmitter.emit('dispatch')
   }
 }

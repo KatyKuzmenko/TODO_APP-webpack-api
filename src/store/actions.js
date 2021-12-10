@@ -1,30 +1,42 @@
-import * as actions from './actionTypes'
+import {
+  INIT_TODOS,
+  ADD_TODO,
+  TOGGLE_TODO,
+  TOGGLE_ALL,
+  DELETE_TODO,
+  EDIT_TITLE,
+  CLEAR_COMPLETED
+} from './actionTypes'
 
-export const addTodo = title => ({
-  type: actions.ADD_TODO,
-  payload: { title }
+export const initState = (todos) => ({
+  type: INIT_TODOS,
+  options: todos
+})
+export const addTodo = (id, title) => ({
+  type: ADD_TODO,
+  options: { id, title }
 })
 
 export const toggleTodo = id => ({
-  type: actions.TOGGLE_TODO,
-  payload: { id }
+  type: TOGGLE_TODO,
+  options: { id }
 })
 
 export const removeTodo = id => ({
-  type: actions.DELETE_TODO,
-  payload: { id }
+  type: DELETE_TODO,
+  options: { id }
 })
 
 export const toggleAll = iscompleted => ({
-  type: actions.TOGGLE_ALL,
-  payload: { iscompleted }
+  type: TOGGLE_ALL,
+  options: { iscompleted }
 })
 
 export const editTitle = (id, title) => ({
-  type: actions.EDIT_TITLE,
-  payload: { id, title }
+  type: EDIT_TITLE,
+  options: { id, title }
 })
 
 export const clearTodos = () => ({
-  type: actions.CLEAR_COMPLETED
+  type: CLEAR_COMPLETED
 })

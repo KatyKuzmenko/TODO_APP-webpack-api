@@ -1,15 +1,15 @@
 import { store } from '../store/store'
 import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
-import Store from '../utils/Store'
 import Todo from './Todo'
 import { toggleAll } from '../store/actions'
-import { toggleAllTodos } from '../API/api'
+import { getTodos, toggleAllTodos } from '../API/api'
+import app from '../screens/TodoList/App'
 
 export default class TodoList extends Component {
   render() {
     const main = document.createElement('section')
-    main.classList.add('main')
+    main.classList.add('main', 'invisible')
 
     const list = document.createElement('ul')
     list.className = 'todo-list'
@@ -41,7 +41,7 @@ export default class TodoList extends Component {
   update() {
     const list = document.querySelector('.todo-list')
     list.innerHTML = ''
-    eventEmitter.emit('initTodos', [Store.state.todos])
+    eventEmitter.emit('initTodos', [store.getState()])
     const main = document.querySelector('.main')
     const todos = document.querySelectorAll('.todo-list__item')
     main.classList.toggle('invisible', todos.length === 0)
@@ -51,8 +51,12 @@ export default class TodoList extends Component {
     store.dispatch(toggleAll(event.target.checked))
     eventEmitter.emit('dispatch')
     toggleAllTodos(event.target.checked)
-      .then(todos => todos)
-      .catch(err => console.warn(err))
+      .then((todos) => todos)
+      .catch((err) => console.warn(err))
+    const items = document.querySelectorAll('.todo-list__item')
+    const togglers = document.querySelectorAll('.toggle')
+    togglers.forEach((toggler) => (toggler.checked = event.target.checked))
+    items.forEach((item) => item.classList.toggle('completed', event.target.checked))
   }
 
   updateAllToggler() {
@@ -62,7 +66,8 @@ export default class TodoList extends Component {
   }
 
   updateTodos() {
-    Store.state.todos.forEach((todo) => new Todo(todo))
+    store.getState().map((todo) => new Todo(todo))
+    console.log('init todos')
   }
 }
 

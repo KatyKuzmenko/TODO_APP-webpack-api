@@ -64,6 +64,10 @@ export default class Modal extends Component {
     deleteTodo(this.id)
       .then(todos => {
         console.log('Success:', todos)
+        eventEmitter.emit('updateTodos')
+        eventEmitter.emit('updateCounter')
+        eventEmitter.emit('updateClearButton')
+        eventEmitter.emit('renderTodoFilter')
       })
       .catch(error => {
         console.warn(error)

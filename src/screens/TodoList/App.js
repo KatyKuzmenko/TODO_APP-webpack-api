@@ -4,23 +4,32 @@ import TodoListFooter from '../../components/TodoListFooter'
 import eventEmitter from '../../utils/EventEmitter'
 import '../../style.css'
 import Modal from '../../components/Modal'
-import Store from '../../utils/Store'
+import { getTodos } from '../../API/api'
+import { createStore, store } from '../../store/store'
+import storeReducer from '../../store/reducer'
+import { initState } from '../../store/actions'
 
 class App {
   constructor() {
-    this.store = new Store()
+    this.todosFromServer = []
+    getTodos()
+      .then((todos) => {
+        this.todosFromServer = todos
+        store.dispatch(initState(this.todosFromServer))
+        console.log(this.todosFromServer)
+        console.log(store.getState())
+      })
     this.todoInput = new NewTodoInput()
     this.todoList = new TodoList()
     this.todoFilter = new TodoListFooter()
     this.modal = new Modal()
-    eventEmitter.subscribe('renderTodoInput', this.todoInput.update)
+    eventEmitter.subscribe('updateTodoInput', this.todoInput.update)
     eventEmitter.subscribe('updateTodos', this.todoList.update)
-    eventEmitter.subscribe('renderTodoFilter', this.todoFilter.updateFooterVisibility)
+    eventEmitter.subscribe('updateTodoFilter', this.todoFilter.updateFooterVisibility)
     eventEmitter.subscribe('renderModalWindow', this.modal.render())
     eventEmitter.subscribe('updateCounter', this.todoFilter.updateCounter)
     eventEmitter.subscribe('updateClearButton', this.todoFilter.updateClearButton)
     eventEmitter.subscribe('updateAllToggler', this.todoList.updateAllToggler)
-    eventEmitter.subscribe('updateClearButton', this.todoFilter.updateClearButton)
     eventEmitter.subscribe('setFilter', this.todoFilter.setFilter)
     eventEmitter.subscribe('initTodos', this.todoList.updateTodos)
   }

@@ -11,12 +11,8 @@ import {
 } from '../API/api'
 
 export default class Store {
-  static store = []
   static filterType = 'all'
 
-  dispatch(action) {
-    state = reduce(state, action)
-  }
   
   // static updateData(action) {
   //   switch (action.type) {

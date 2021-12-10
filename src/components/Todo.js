@@ -4,6 +4,7 @@ import '../style.css'
 import eventEmitter from '../utils/EventEmitter'
 import { store } from '../store/store'
 import { editTitle, toggleTodo } from '../store/actions'
+import { updateStatus, updateTodo } from '../API/api'
 
 export default class Todo extends Component {
   constructor(todo) {
@@ -79,6 +80,9 @@ export default class Todo extends Component {
   }
 
   toggleTodo(event) {
+    updateStatus(+event.target.dataset.inputId, event.target.checked)
+      .then((todos) => todos)
+      .catch((err) => console.warn(err))
     store.dispatch(toggleTodo(+event.target.dataset.inputId))
 
     const selectedTodo = store.getState().find((todo) => todo.id === +event.target.dataset.inputId)
@@ -104,7 +108,11 @@ export default class Todo extends Component {
       return
     }
 
-    store.dispatch(editTitle(+event.target.id, event.target.value))
+    updateTodo(this.id, event.target.value)
+      .then((todos) => todos)
+      .catch((err) => console.warn(err))
+    store.dispatch(editTitle(this.id, event.target.value))
+
     eventEmitter.emit('dispatch')
   }
 
@@ -112,8 +120,10 @@ export default class Todo extends Component {
     if (!event.target.value.trim()) {
       return
     }
-
-    store.dispatch(editTitle(+event.target.id, event.target.value))
+    updateTodo(event.target.id, event.target.value)
+      .then((todos) => todos)
+      .catch((err) => console.warn(err))
+    store.dispatch(editTitle(event.target.id, event.target.value))
     eventEmitter.emit('dispatch')
   }
 

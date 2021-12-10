@@ -3,6 +3,7 @@ import eventEmitter from '../utils/EventEmitter'
 import Store from '../utils/Store'
 import { store } from '../store/store'
 import { clearTodos } from '../store/actions'
+import { deleteCompletedTodos } from '../API/api'
 
 export default class TodoListFooter extends Component {
   static completedTodos = store.getState().filter((todo) => todo.iscompleted)
@@ -68,7 +69,7 @@ export default class TodoListFooter extends Component {
   }
 
   setFilter(type) {
-    Store.state.filterType = type
+    Store.filterType = type
     const filters = document.querySelectorAll('[data-filter]')
     filters.forEach((filter) => {
       filter.classList.remove('selected')
@@ -113,10 +114,11 @@ export default class TodoListFooter extends Component {
     counter.innerText = `${notCompletedTogglers.length} items left`
     eventEmitter.emit('updateClearButton')
     eventEmitter.emit('updateAllToggler')
-    eventEmitter.emit('setFilter', [Store.state.filterType])
+    eventEmitter.emit('setFilter', [Store.filterType])
   }
 
   clearCompleted() {
+    deleteCompletedTodos().then((todos) => todos)
     store.dispatch(clearTodos())
   }
 }
