@@ -11,13 +11,12 @@ import { initState } from '../../store/actions'
 class App {
   constructor() {
     this.todosFromServer = []
-    getTodos()
-      .then((todos) => {
-        this.todosFromServer = todos
-        store.dispatch(initState(this.todosFromServer))
-        eventEmitter.emit('updateTodos')
-        eventEmitter.emit('updateTodoFilter')
-      })
+    getTodos().then((todos) => {
+      this.todosFromServer = todos
+      store.dispatch(initState(this.todosFromServer))
+      eventEmitter.emit('updateTodos')
+      eventEmitter.emit('updateTodoFilter')
+    })
     this.todoInput = new NewTodoInput()
     this.todoList = new TodoList()
     this.todoFilter = new TodoListFooter()

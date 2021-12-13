@@ -119,8 +119,7 @@ export default class TodoListFooter extends Component {
   }
 
   clearCompleted() {
-    deleteCompletedTodos()
-      .then(() => {
+    deleteCompletedTodos().then(() => {
       store.dispatch(clearTodos())
       eventEmitter.emit('updateTodos')
       eventEmitter.emit('updateTodoFilter')

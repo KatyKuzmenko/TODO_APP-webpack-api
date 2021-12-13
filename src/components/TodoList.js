@@ -62,7 +62,6 @@ export default class TodoList extends Component {
     const notCompletedTogglers = document.querySelectorAll('.toggle:not(:checked)')
     const allToggler = document.querySelector('.toggle-all')
     allToggler.checked = notCompletedTogglers.length === 0
-
   }
 
   updateTodos() {

@@ -5,39 +5,39 @@ import {
   TOGGLE_ALL,
   DELETE_TODO,
   EDIT_TITLE,
-  CLEAR_COMPLETED
+  CLEAR_COMPLETED,
 } from './actionTypes'
 
 export const initState = (todos) => ({
   type: INIT_TODOS,
-  options: todos
+  options: todos,
 })
 
 export const addTodo = (id, title) => ({
   type: ADD_TODO,
-  options: { id, title }
+  options: { id, title },
 })
 
 export const toggleTodo = (id, iscompleted) => ({
   type: TOGGLE_TODO,
-  options: { id, iscompleted }
+  options: { id, iscompleted },
 })
 
-export const removeTodo = id => ({
+export const removeTodo = (id) => ({
   type: DELETE_TODO,
-  options: { id }
+  options: { id },
 })
 
-export const toggleAll = iscompleted => ({
+export const toggleAll = (iscompleted) => ({
   type: TOGGLE_ALL,
-  options: { iscompleted }
+  options: { iscompleted },
 })
 
 export const editTitle = (id, title) => ({
   type: EDIT_TITLE,
-  options: { id, title }
+  options: { id, title },
 })
 
 export const clearTodos = () => ({
-  type: CLEAR_COMPLETED
+  type: CLEAR_COMPLETED,
 })

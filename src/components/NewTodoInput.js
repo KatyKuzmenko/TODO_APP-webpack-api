@@ -47,7 +47,6 @@ export default class NewTodoInput extends Component {
         eventEmitter.emit('updateTodoFilter')
       })
       .catch((err) => console.warn(err))
-    
   }
 }
 

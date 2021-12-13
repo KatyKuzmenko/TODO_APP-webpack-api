@@ -59,12 +59,12 @@ export default class Modal extends Component {
 
   deleteTodoAndCloseModalWindow() {
     deleteTodo(this.id)
-      .then(()=> {
+      .then(() => {
         store.dispatch(removeTodo(this.id))
         eventEmitter.emit('updateTodos')
         eventEmitter.emit('updateTodoFilter')
       })
-      .catch(error => {
+      .catch((error) => {
         console.warn(error)
       })
     const modalWindow = document.querySelector(`.modal${this.id}`)
