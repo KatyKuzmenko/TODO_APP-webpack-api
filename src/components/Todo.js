@@ -1,5 +1,4 @@
 import Component from '../utils/Component'
-import Store from '../utils/Store'
 import '../style.css'
 import eventEmitter from '../utils/EventEmitter'
 import { store } from '../store/store'
@@ -65,7 +64,7 @@ export default class Todo extends Component {
     })
 
     todoTitle.forEach((title) => {
-      title.addEventListener('dblclick', (event) => this.editTitle(event))
+      title.addEventListener('dblclick', (event) => this.editTodoTitle(event))
     })
 
     destroyButton.forEach((button) => {
@@ -81,19 +80,17 @@ export default class Todo extends Component {
 
   toggleTodo(event) {
     updateStatus(+event.target.dataset.inputId, event.target.checked)
-      .then((todos) => todos)
+      .then(() => {
+        store.dispatch(toggleTodo(+event.target.dataset.inputId, event.target.checked))
+      })
       .catch((err) => console.warn(err))
-    store.dispatch(toggleTodo(+event.target.dataset.inputId))
-
-    const selectedTodo = store.getState().find((todo) => todo.id === +event.target.dataset.inputId)
-    this.iscompleted = event.target.checked
     const item = document.querySelector(`[data-todo-id="${event.target.dataset.inputId}"]`)
 
     event.target.closest('.todo-list__item').classList.toggle('completed', event.target.checked)
-    eventEmitter.emit('updateCounter', [])
+    eventEmitter.emit('updateCounter')
   }
 
-  editTitle(event) {
+  editTodoTitle(event) {
     const todoId = +event.target.dataset.labelId
     const editTodo = document.querySelector(`.edit${todoId}`)
     const todoItem = document.querySelector(`.view${todoId}`)
@@ -108,23 +105,24 @@ export default class Todo extends Component {
       return
     }
 
-    updateTodo(this.id, event.target.value)
-      .then((todos) => todos)
+    updateTodo(+event.target.id, event.target.value)
+      .then(() => {
+        store.dispatch(editTitle(+event.target.id, event.target.value))
+        eventEmitter.emit('updateTodos')
+      })
       .catch((err) => console.warn(err))
-    store.dispatch(editTitle(this.id, event.target.value))
-
-    eventEmitter.emit('dispatch')
   }
 
   setNewTitleOnBlur(event) {
     if (!event.target.value.trim()) {
       return
     }
-    updateTodo(event.target.id, event.target.value)
-      .then((todos) => todos)
+    updateTodo(+event.target.id, event.target.value)
+      .then(() => {
+        store.dispatch(editTitle(+event.target.id, event.target.value))
+        eventEmitter.emit('updateTodos')
+      })
       .catch((err) => console.warn(err))
-    store.dispatch(editTitle(event.target.id, event.target.value))
-    eventEmitter.emit('dispatch')
   }
 
   openModalWindow(event) {

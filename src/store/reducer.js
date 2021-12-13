@@ -5,13 +5,15 @@ import {
   TOGGLE_ALL,
   DELETE_TODO,
   EDIT_TITLE,
-  CLEAR_COMPLETED
+  CLEAR_COMPLETED,
+  SET_FILTER,
 } from './actionTypes'
 
 export default function storeReducer(state = [], action) {
   switch (action.type) {
     case INIT_TODOS:
-      return [ ...action.options ]
+      return [...action.options]
+
     case ADD_TODO:
       return [
         ...state,
@@ -25,7 +27,7 @@ export default function storeReducer(state = [], action) {
     case TOGGLE_TODO:
       return state.map((todo) => {
         if (todo.id === action.options.id) {
-          return { ...todo, iscompleted: !todo.iscompleted }
+          return { ...todo, iscompleted: action.options.iscompleted }
         }
 
         return todo
@@ -39,6 +41,8 @@ export default function storeReducer(state = [], action) {
         if (todo.id === action.options.id) {
           return { ...todo, title: action.options.title }
         }
+
+        return todo
       })
 
     case TOGGLE_ALL:

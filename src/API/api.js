@@ -67,35 +67,3 @@ export const deleteCompletedTodos = () => {
 export const getTodos = () => request('/todos')
 
 export const getTodo = (todoId) => request(`/todos/${todoId}`)
-
-// updateTodo(7, 'qwwerere')
-//   .then(todos => {
-//     console.log('Success:', todos)
-//   })
-//   .catch(error => {
-//     console.warn(error)
-//   })
-
-// createTodo('fetchapi')
-//   .then(todos => {
-//     console.log('Success:', todos)
-//   })
-//   .catch(error => {
-//     console.warn(error)
-//   })
-
-// getTodo(3)
-//   .then(todos => {
-//     console.log('Success:', todos)
-//   })
-//   .catch(error => {
-//     console.warn(error)
-//   })
-
-// deleteTodo(3)
-//   .then(todos => {
-//     console.log('Success:', todos)
-//   })
-//   .catch(error => {
-//     console.warn(error)
-//   })

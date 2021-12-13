@@ -1,6 +1,5 @@
 import { store } from '../store/store'
 import Component from '../utils/Component'
-import Store from '../utils/Store'
 import { createTodo } from '../API/api'
 import eventEmitter from '../utils/EventEmitter'
 import { addTodo } from '../store/actions'
@@ -41,15 +40,14 @@ export default class NewTodoInput extends Component {
     }
 
     createTodo(event.target.value)
-      .then((todos) => todos)
+      .then((id) => {
+        store.dispatch(addTodo(id, event.target.value))
+        this.update()
+        eventEmitter.emit('updateTodos')
+        eventEmitter.emit('updateTodoFilter')
+      })
       .catch((err) => console.warn(err))
-    store.dispatch(addTodo(+new Date(), event.target.value))
-    this.update()
-    eventEmitter.emit('updateTodos')
-    eventEmitter.emit('updateTodoFilter')
-    eventEmitter.emit('updateCounter')
-    eventEmitter.emit('updateClearButton')
-    eventEmitter.emit('dispatch')
+    
   }
 }
 

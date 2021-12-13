@@ -5,7 +5,7 @@ import eventEmitter from '../../utils/EventEmitter'
 import '../../style.css'
 import Modal from '../../components/Modal'
 import { getTodos } from '../../API/api'
-import { createStore, store } from '../../store/store'
+import { store } from '../../store/store'
 import storeReducer from '../../store/reducer'
 import { initState } from '../../store/actions'
 
@@ -16,8 +16,8 @@ class App {
       .then((todos) => {
         this.todosFromServer = todos
         store.dispatch(initState(this.todosFromServer))
-        console.log(this.todosFromServer)
-        console.log(store.getState())
+        eventEmitter.emit('updateTodos')
+        eventEmitter.emit('updateTodoFilter')
       })
     this.todoInput = new NewTodoInput()
     this.todoList = new TodoList()

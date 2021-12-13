@@ -1,11 +1,11 @@
 import Component from '../utils/Component'
 import eventEmitter from '../utils/EventEmitter'
-import Store from '../utils/Store'
 import { store } from '../store/store'
 import { clearTodos } from '../store/actions'
 import { deleteCompletedTodos } from '../API/api'
 
 export default class TodoListFooter extends Component {
+  static filterType = 'all'
   static completedTodos = store.getState().filter((todo) => todo.iscompleted)
 
   render() {
@@ -69,7 +69,7 @@ export default class TodoListFooter extends Component {
   }
 
   setFilter(type) {
-    Store.filterType = type
+    TodoListFooter.filterType = type
     const filters = document.querySelectorAll('[data-filter]')
     filters.forEach((filter) => {
       filter.classList.remove('selected')
@@ -100,6 +100,7 @@ export default class TodoListFooter extends Component {
     const footer = document.querySelector('.footer')
     const todos = document.querySelectorAll('.todo-list__item')
     footer.classList.toggle('invisible', todos.length === 0)
+    eventEmitter.emit('updateCounter')
   }
 
   updateClearButton() {
@@ -112,14 +113,18 @@ export default class TodoListFooter extends Component {
     const counter = document.querySelector('.todo-count')
     const notCompletedTogglers = document.querySelectorAll('.toggle:not(:checked)')
     counter.innerText = `${notCompletedTogglers.length} items left`
-    eventEmitter.emit('updateClearButton')
     eventEmitter.emit('updateAllToggler')
-    eventEmitter.emit('setFilter', [Store.filterType])
+    eventEmitter.emit('updateClearButton')
+    eventEmitter.emit('setFilter', [TodoListFooter.filterType])
   }
 
   clearCompleted() {
-    deleteCompletedTodos().then((todos) => todos)
-    store.dispatch(clearTodos())
+    deleteCompletedTodos()
+      .then(() => {
+      store.dispatch(clearTodos())
+      eventEmitter.emit('updateTodos')
+      eventEmitter.emit('updateTodoFilter')
+    })
   }
 }
 

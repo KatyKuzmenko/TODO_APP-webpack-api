@@ -12,14 +12,15 @@ export const initState = (todos) => ({
   type: INIT_TODOS,
   options: todos
 })
+
 export const addTodo = (id, title) => ({
   type: ADD_TODO,
   options: { id, title }
 })
 
-export const toggleTodo = id => ({
+export const toggleTodo = (id, iscompleted) => ({
   type: TOGGLE_TODO,
-  options: { id }
+  options: { id, iscompleted }
 })
 
 export const removeTodo = id => ({
