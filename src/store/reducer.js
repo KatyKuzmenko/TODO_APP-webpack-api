@@ -6,7 +6,6 @@ import {
   DELETE_TODO,
   EDIT_TITLE,
   CLEAR_COMPLETED,
-  SET_FILTER,
 } from './actionTypes'
 
 export default function storeReducer(state = [], action) {

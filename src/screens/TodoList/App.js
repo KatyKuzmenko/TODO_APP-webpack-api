@@ -6,7 +6,6 @@ import '../../style.css'
 import Modal from '../../components/Modal'
 import { getTodos } from '../../API/api'
 import { store } from '../../store/store'
-import storeReducer from '../../store/reducer'
 import { initState } from '../../store/actions'
 
 class App {
