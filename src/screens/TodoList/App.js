@@ -1,15 +1,18 @@
 import NewTodoInput from '../../components/NewTodoInput'
 import TodoList from '../../components/TodoList'
 import TodoListFooter from '../../components/TodoListFooter'
+import Modal from '../../components/Modal'
+import Loader from '../../components/Loader'
 import eventEmitter from '../../utils/EventEmitter'
 import '../../style.css'
-import Modal from '../../components/Modal'
 import { getTodos } from '../../API/api'
 import { store } from '../../store/store'
 import { initState } from '../../store/actions'
 
 class App {
   constructor() {
+    this.loader = new Loader()
+    eventEmitter.emit('showLoader')
     this.todosFromServer = []
     getTodos().then((todos) => {
       this.todosFromServer = todos
@@ -30,6 +33,8 @@ class App {
     eventEmitter.subscribe('updateAllToggler', this.todoList.updateAllToggler)
     eventEmitter.subscribe('setFilter', this.todoFilter.setFilter)
     eventEmitter.subscribe('initTodos', this.todoList.updateTodos)
+    eventEmitter.subscribe('showLoader', this.loader.showLoader)
+    eventEmitter.subscribe('hideLoader', this.loader.hideLoader)
   }
 
   render() {
@@ -38,6 +43,7 @@ class App {
     div.append(this.todoList.render())
     div.append(this.todoFilter.render())
     div.append(this.modal.render())
+    div.append(this.loader.render())
     return div
   }
 }

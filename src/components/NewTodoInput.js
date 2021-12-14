@@ -38,7 +38,7 @@ export default class NewTodoInput extends Component {
     if (!event.target.value || event.key !== 'Enter') {
       return
     }
-
+    eventEmitter.emit('showLoader')
     createTodo(event.target.value)
       .then((id) => {
         store.dispatch(addTodo(id, event.target.value))

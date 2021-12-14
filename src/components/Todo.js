@@ -101,6 +101,7 @@ export default class Todo extends Component {
   }
 
   setNewTitleOnEnter(event) {
+    eventEmitter.emit('showLoader')
     if (!event.target.value.trim() || event.key !== 'Enter') {
       return
     }
@@ -114,6 +115,7 @@ export default class Todo extends Component {
   }
 
   setNewTitleOnBlur(event) {
+    eventEmitter.emit('showLoader')
     if (!event.target.value.trim()) {
       return
     }

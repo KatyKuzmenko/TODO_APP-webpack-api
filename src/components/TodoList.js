@@ -44,6 +44,7 @@ export default class TodoList extends Component {
     const main = document.querySelector('.main')
     const todos = document.querySelectorAll('.todo-list__item')
     main.classList.toggle('invisible', todos.length === 0)
+    eventEmitter.emit('hideLoader')
   }
 
   toggleAll(event) {
@@ -66,6 +67,7 @@ export default class TodoList extends Component {
 
   updateTodos() {
     store.getState().map((todo) => new Todo(todo))
+    eventEmitter.emit('hideLoader')
   }
 }
 

@@ -58,6 +58,7 @@ export default class Modal extends Component {
   }
 
   deleteTodoAndCloseModalWindow() {
+    eventEmitter.emit('showLoader')
     deleteTodo(this.id)
       .then(() => {
         store.dispatch(removeTodo(this.id))
