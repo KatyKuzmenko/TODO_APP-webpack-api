@@ -101,10 +101,10 @@ export default class Todo extends Component {
   }
 
   setNewTitleOnEnter(event) {
-    eventEmitter.emit('showLoader')
     if (!event.target.value.trim() || event.key !== 'Enter') {
       return
     }
+    eventEmitter.emit('showLoader')
 
     updateTodo(+event.target.id, event.target.value)
       .then(() => {
@@ -115,10 +115,11 @@ export default class Todo extends Component {
   }
 
   setNewTitleOnBlur(event) {
-    eventEmitter.emit('showLoader')
     if (!event.target.value.trim()) {
       return
     }
+    eventEmitter.emit('showLoader')
+
     updateTodo(+event.target.id, event.target.value)
       .then(() => {
         store.dispatch(editTitle(+event.target.id, event.target.value))
